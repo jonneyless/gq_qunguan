@@ -3,11 +3,12 @@ import time
 
 import helpp
 from assist import get_current_time
+from config import threadNumMaps
 from lib import db_redis
 from lib import db
 from handle import callback
 
-thread_num = 4
+thread_num = threadNumMaps['callback']
 
 
 class MyThread(threading.Thread):

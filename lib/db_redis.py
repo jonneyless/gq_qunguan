@@ -1,8 +1,9 @@
 import redis
 import json
+from config import redisInfo
 
-pool = redis.ConnectionPool(host='127.0.0.1', port=6379, db=10)
-pool2 = redis.ConnectionPool(host='127.0.0.1', port=6379, db=2)
+pool = redis.ConnectionPool(host=redisInfo["host"], port=redisInfo["port"], db=10)
+pool2 = redis.ConnectionPool(host=redisInfo["host"], port=redisInfo["port"], db=2)
 
 prefix = "qunguan_test"
 prefix_handleUser = "handleUserqq"
@@ -255,6 +256,25 @@ def approve_get():
         return None
     else:
         return json.loads(data)
+
+
+def bio_get(userTgId):
+    key = "user:bio:" + str(userTgId)
+
+    conn = get_conn()
+
+    data = conn.get(key)
+    if data is None:
+        return None
+    else:
+        return json.loads(data)
+
+def bio_set(userTgId, bio):
+    key = "user:bio:" + str(userTgId)
+
+    conn = get_conn()
+
+    conn.set(key, json.dumps(bio), ex=600)
         
         
 def errorUser_get():

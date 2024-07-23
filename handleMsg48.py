@@ -2,13 +2,14 @@ import threading
 import time
 
 from assist import get_current_time
+from config import threadNumMaps
 from lib import db
 from lib import db_redis
 import helpp
 from handle import msg_freq_limit, msg_freq_limit_single
 
 
-thread_num = 2
+thread_num = threadNumMaps['msg48']
 
 
 class MyThread(threading.Thread):

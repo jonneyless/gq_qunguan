@@ -1,6 +1,7 @@
 import threading
 import time
 
+from config import threadNumMaps
 from lib import db
 from lib import db_redis
 import net
@@ -9,7 +10,7 @@ import math
 from assist import get_current_time
 
 
-thread_num = 1
+thread_num = threadNumMaps['tgTest']
 
 
 def delete_one(bot_url, group_tg_id, user_tg_id, message_tg_id, reason="", ope_user_tg_id=""):

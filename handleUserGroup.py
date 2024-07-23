@@ -2,11 +2,12 @@ import threading
 import time
 
 from assist import get_current_time
+from config import threadNumMaps
 from lib import db
 from lib import db_redis
 
 
-thread_num = 16
+thread_num = threadNumMaps['userGroup']
 
 
 class MyThread(threading.Thread):

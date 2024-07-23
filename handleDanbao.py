@@ -3,11 +3,12 @@ import time
 
 import helpp
 from assist import get_current_time
+from config import threadNumMaps
 from lib import db_redis
 from handle import danbao
 
 
-thread_num = 1
+thread_num = threadNumMaps['danbao']
 
 
 class MyThread(threading.Thread):

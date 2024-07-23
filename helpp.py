@@ -455,6 +455,9 @@ def at_official_set_get(group_tg_id, user_tg_id, created_at_timestamp):
 # ======================================================================================================================
 
 def has_restrict_word(text, type_str):
+    if text is None:
+        return None
+
     text = handle_text(text)
     
     restrict_words = db.restrict_word_get(type_str)
@@ -546,6 +549,11 @@ def has_fullname_restrict_word(fullname):
 def has_username_restrict_word(username):
     type_str = "9"
     return has_restrict_word(username, type_str)
+
+
+def has_intro_restrict_word(intro):
+    type_str = "10"
+    return has_restrict_word(intro, type_str)
 
 
 def has_msg_restrict_word(text):

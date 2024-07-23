@@ -2,11 +2,12 @@ import threading
 import time
 
 from assist import get_current_time
+from config import threadNumMaps
 from lib import db_redis
 from handle import approve
 
 
-thread_num = 32
+thread_num = threadNumMaps['approve']
 
 
 class MyThread(threading.Thread):

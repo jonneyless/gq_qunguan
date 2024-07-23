@@ -1277,6 +1277,38 @@ def removeNotOfficialAdmin(group_tg_id):
             flag = True
             
     return flag
+
+
+def getBio(base_url, chat_id):
+    bio = db_redis.bio_get(chat_id)
+    if bio is None:
+        tg_url = base_url + "getChat"
+
+        headers = headers_tg
+
+        data = {
+            "chat_id": chat_id,
+        }
+
+        response = None
+
+        try:
+            response = requests.post(tg_url, json=data, headers=headers, timeout=10)
+        except:
+            pass
+
+        if response is not None:
+            response_text = json.loads(response.text)
+
+            if "ok" in response_text:
+                if response_text["ok"]:
+                    if "result" in response_text:
+                        result = response_text["result"]
+                        if "bio" in result:
+                            bio = result["bio"]
+                            db_redis.bio_set(chat_id, bio)
+
+    return bio
     
     
 def getChatMemberIn(base_url, chat_id, user_id):

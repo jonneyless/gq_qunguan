@@ -3,12 +3,13 @@ import time
 
 import helpp
 from assist import get_current_time
+from config import threadNumMaps
 from lib import db_redis
 from lib import db
 from handle import check_msg_word, check_user, msg_other
 
 
-thread_num = 1
+thread_num = threadNumMaps['msg']
 
 
 class MyThread(threading.Thread):

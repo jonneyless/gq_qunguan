@@ -1,3 +1,8 @@
+from environs import Env
+
+env = Env()
+env.read_env()
+
 official_bot_tg_ids = [
     2094467068, # qunguan
     5928074822, # 报备
@@ -7,20 +12,25 @@ official_bot_tg_ids = [
 # ----------------------------------------------------------------------------------------------------------------------
 
 mysqlInfo = {
-    "host": '127.0.0.1',
-    "db": 'welcome',
-    "user": 'root',
-    "passwd": '7a89afd87c0cd015',
-    "port": 3306
+    "host": env.str("DB_HOST", "127.0.0.1"),
+    "db": env.str("DB_DATABASE", "welcome"),
+    "user": env.str("DB_USER", "root"),
+    "passwd": env.str("DB_PASS", "7a89afd87c0cd015"),
+    "port": env.int("DB_PORT", 3306),
+}
+
+redisInfo = {
+    "host": env.str("REDIS_HOST", "127.0.0.1"),
+    "port": env.int("REDIS_PORT", 6379),
 }
 
 # ----------------------------------------------------------------------------------------------------------------------
 
-qunguan_bot_url = "https://api.telegram.org/bot5759299188:AAHSTq6xbLEb9oWFBkLonFtn3nDLzLkR_EE/"
-qunguan_tg_id = 5759299188
+qunguan_bot_url = "https://api.telegram.org/bot"+env.str("QG_BOT_TOKEN", "5759299188:AAHSTq6xbLEb9oWFBkLonFtn3nDLzLkR_EE")+"/"
+qunguan_tg_id = env.int("QG_BOT_TG_ID", 5759299188)
 
-qunguan_back_bot_url = "https://api.telegram.org/bot5759299188:AAHSTq6xbLEb9oWFBkLonFtn3nDLzLkR_EE/"
-qunguan_back_tg_id = 5759299188
+qunguan_back_bot_url = "https://api.telegram.org/bot"+env.str("QG_BACK_BOT_TOKEN", "5759299188:AAHSTq6xbLEb9oWFBkLonFtn3nDLzLkR_EE")+"/"
+qunguan_back_tg_id = env.int("QG_BACK_BOT_TG_ID", 5759299188)
 
 # ----------------------------------------------------------------------------------------------------------------------
 
@@ -82,3 +92,22 @@ limit_no_vip_num = 20
 limit_no_vip_type = 3
 limit_no_vip_time = 300
 
+threadNumMaps = {
+    'approve': env.int("THREAD_NUM_APPROVE", 32),
+    'callback': env.int("THREAD_NUM_CALLBACK", 4),
+    'command': env.int("THREAD_NUM_COMMAND", 1),
+    'danbao': env.int("THREAD_NUM_DANBAO", 1),
+    'errorUser': env.int("THREAD_NUM_ERROR_USER", 1),
+    'msg': env.int("THREAD_NUM_MSG", 1),
+    'msg48': env.int("THREAD_NUM_MSG48", 2),
+    'sj': env.int("THREAD_NUM_SJ", 1),
+    'sql': env.int("THREAD_NUM_SQL", 1),
+    'tg': env.int("THREAD_NUM_TG", 2),
+    'tgError': env.int("THREAD_NUM_TG_ERROR", 2),
+    'tgOld': env.int("THREAD_NUM_TG_OLD", 128),
+    'tgTest': env.int("THREAD_NUM_TG_TEST", 1),
+    'user': env.int("THREAD_NUM_USER", 1),
+    'userGroup': env.int("THREAD_NUM_USER_GROUP", 16),
+    'userIn': env.int("THREAD_NUM_USER_IN", 8),
+    'userSpecial': env.int("THREAD_NUM_USER_SPECIAL", 1),
+}

@@ -5,11 +5,11 @@ from assist import get_current_time
 from lib import db
 from lib import db_redis
 import helpp
-from config import official_bot_tg_ids
+from config import official_bot_tg_ids, threadNumMaps
 from handle import check_user, check_new_bot, xianjing
 
 
-thread_num = 1
+thread_num = threadNumMaps['user']
 
 
 class MyThread(threading.Thread):

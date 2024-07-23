@@ -7,10 +7,9 @@ import net
 import helpp
 import math
 from assist import get_current_time
-from config import vip_group_tg_id, svip_group_tg_id, boss_group_tg_id, ad_group_tg_id
+from config import vip_group_tg_id, svip_group_tg_id, boss_group_tg_id, ad_group_tg_id, threadNumMaps
 
-
-thread_num = 2
+thread_num = threadNumMaps['tgError']
 
 
 def delete_one(bot_url, group_tg_id, user_tg_id, message_tg_id, reason="", ope_user_tg_id=""):

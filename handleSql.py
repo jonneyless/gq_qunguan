@@ -4,11 +4,12 @@ import time
 import helpp
 from assist import get_current_time
 import assist
+from config import threadNumMaps
 from lib import db_redis
 from lib import db
 
 
-thread_num = 1
+thread_num = threadNumMaps['sql']
 
     
 class MyThread(threading.Thread):

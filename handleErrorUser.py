@@ -2,12 +2,13 @@ import threading
 import time
 
 from assist import get_current_time
+from config import threadNumMaps
 from lib import db_redis
 from lib import db
 import helpp
 
 
-thread_num = 1
+thread_num = threadNumMaps['errorUser']
 
 
 class MyThread(threading.Thread):

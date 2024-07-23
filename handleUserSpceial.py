@@ -2,13 +2,14 @@ import threading
 import time
 
 from assist import get_current_time
+from config import threadNumMaps
 from lib import db
 from lib import db_redis
 import helpp
 import net
 
 
-thread_num = 1
+thread_num = threadNumMaps['userSpecial']
 
 
 def get_btns():

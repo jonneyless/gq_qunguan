@@ -4,11 +4,12 @@ import time
 import helpp
 from assist import get_current_time
 import assist
+from config import threadNumMaps
 from lib import db_redis
 from lib import db
 
 
-thread_num = 1
+thread_num = threadNumMaps['sj']
 
 
 def get_start_end(created_at_timestamp):
