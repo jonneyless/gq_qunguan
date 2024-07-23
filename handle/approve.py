@@ -1,4 +1,3 @@
-import assist
 import helpp
 import net
 from lib import db
@@ -16,6 +15,10 @@ def index(group_tg_id, user_tg_id, group, user):
     fullname = user["fullname"]
     username = user["username"]
     hasChinese = int(user["hasChinese"])
+    bot_url = helpp.get_bot_url(group_tg_id, 1, True)
+    intro = net.getBio(bot_url, user_tg_id)
+    print('intro:', intro)
+
 
     # // status = 1 成功
     # // status = 2 等待中
@@ -105,7 +108,24 @@ def index(group_tg_id, user_tg_id, group, user):
             db.log_approve_update(log_id, 3, 7)
             
         print("username_restrict_word %s %s %s %s %s %s，%s" % (group_tg_id, user_tg_id, username, fullname, flag, description, name))
-            
+
+        return
+
+    intro_restrict_word = helpp.has_intro_restrict_word(intro)
+    if intro_restrict_word is not None:
+        name = intro_restrict_word["name"]
+        reason = "用户简介中包含敏感词：%s" % name
+
+        db.cheat_save(user_tg_id, reason)
+
+        bot_url = helpp.get_bot_url(group_tg_id, 3)
+
+        flag, description = net.declineChatJoinRequestWrap(bot_url, group_tg_id, user_tg_id)
+        if flag:
+            db.log_approve_update(log_id, 3, 7)
+
+        print("intro_restrict_word %s %s %s %s %s %s，%s" % (group_tg_id, user_tg_id, username, fullname, flag, description, name))
+
         return
     
     if status_approve_one == 1 and hasChinese == 1:

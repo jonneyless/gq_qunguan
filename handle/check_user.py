@@ -1,11 +1,9 @@
-import threading
-
 import assist
 import helpp
+import net
+import template
 from lib import db
 from lib import db_redis
-import template
-import net
 
 
 def index(group_tg_id, user_tg_id, user, say=False, message_tg_id=-1):
@@ -139,7 +137,48 @@ def index(group_tg_id, user_tg_id, user, say=False, message_tg_id=-1):
                     "message_tg_id": message_tg_id,
                     "reason": reason,
                 })
-                
+
+            flag_continue = False
+
+    if flag_continue:
+        bot_url = helpp.get_bot_url(group_tg_id, 1, True)
+        intro = net.getBio(bot_url, user_tg_id)
+        intro_restrict_word = helpp.has_intro_restrict_word(intro)
+        if intro_restrict_word is not None:
+            name = intro_restrict_word["name"]
+            level = int(intro_restrict_word["level"])
+            reason = "用户简介中包含敏感词：%s" % name
+
+            db.cheat_save(user_tg_id, reason)
+
+            print("intro_restrict_word %s %s %s %s,%s | %s" % (group_tg_id, user_tg_id, username, name, level, say))
+
+            if level == 1:
+                restrict_timestamp = assist.get_restrict_time(180)  # 禁言180天
+                db_redis.tgData_set({
+                    "typee": "restrict",
+                    "group_tg_id": group_tg_id,
+                    "user_tg_id": user_tg_id,
+                    "reason": reason,
+                    "until_date": restrict_timestamp,
+                })
+            else:
+                db_redis.tgData_set({
+                    "typee": "ban",
+                    "group_tg_id": group_tg_id,
+                    "user_tg_id": user_tg_id,
+                    "reason": reason,
+                })
+
+            if say:
+                db_redis.tgData_set({
+                    "typee": "deleteAll",
+                    "group_tg_id": group_tg_id,
+                    "user_tg_id": user_tg_id,
+                    "message_tg_id": message_tg_id,
+                    "reason": reason,
+                })
+
             flag_continue = False
        
     if flag_continue:
