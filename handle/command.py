@@ -1,12 +1,13 @@
-import time
 import re
+import time
+
 import assist
 import helpp
+import httpp
 import net
+import template
 from lib import db
 from lib import db_redis
-import template
-import httpp
 
 
 def index(group_tg_id, user_tg_id, msg_tg_id, text, group, reply_message_tg_id, reply_user_tg_id, reply_text, entity_usernames, entity_user_tg_ids, created_at_timestamp):
@@ -59,6 +60,33 @@ def index(group_tg_id, user_tg_id, msg_tg_id, text, group, reply_message_tg_id, 
                     net.sendMessageOne(bot_url, group_tg_id, template.msg_ok())
                 else:
                     net.sendMessageOne(bot_url, group_tg_id, template.msg_error())
+
+        if text == "回收管理":
+            # 移除非官方 管理
+            official = db.official_one(user_tg_id)
+            if official:
+                bot_url = helpp.get_bot_url(group_tg_id, 1, True)
+
+                admins = db.get_group_not_official_admin(group_tg_id)
+                admins_empty_num = 0
+                admins_empty_num_ok = 0
+
+                for admin_item in admins:
+                    admins_empty_num = admins_empty_num + 1
+
+                    flag = net.remove_admin(bot_url, group_tg_id, admin_item["user_id"])
+                    if flag:
+                        admins_empty_num_ok = admins_empty_num_ok + 1
+
+                info = "成功"
+                if admins_empty_num != admins_empty_num_ok:
+                    info = "部分管理操作失败，请重试"
+
+                m_id = net.sendMessageOne(bot_url, group_tg_id, info)
+                # time.sleep(3)
+                # net.deleteMessageOne(bot_url, group_tg_id, m_id)
+
+            return
 
         # if text == "验群" or text == "验证":
         #     bot_url = helpp.get_bot_url(group_tg_id, 1, True)
