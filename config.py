@@ -110,4 +110,5 @@ threadNumMaps = {
     'userGroup': env.int("THREAD_NUM_USER_GROUP", 16),
     'userIn': env.int("THREAD_NUM_USER_IN", 8),
     'userSpecial': env.int("THREAD_NUM_USER_SPECIAL", 1),
+    'forewarning': env.int("THREAD_NUM_FOREWARNING", 1),
 }

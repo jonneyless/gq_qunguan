@@ -1,9 +1,8 @@
-from lib import db_redis
-from lib import dbpool
+import assist
 from assist import get_current_time, user_same, is_number, get_current_timestamp, timestamp2time, unique_list
 from config import qunguan_tg_id, business_detail_types_no_limit
-import assist
-
+from lib import db_redis
+from lib import dbpool
 
 OPMysql = dbpool.OPMysql
 
@@ -1433,7 +1432,22 @@ def groups_get1000(max_id=-1):
     opm.dispose()
 
     return result
-    
+
+
+def getGroupIds():
+    opm = OPMysql()
+
+    sql = "select chat_id from `groups` where deleted = 2 and opened = 1 and flag = 0"
+
+    result = opm.op_select_all(sql)
+
+    opm.dispose()
+
+    ids = []
+    for group in result:
+        ids.append(group['chat_id'])
+
+    return ids
     
 # ======================================================================================================================
 

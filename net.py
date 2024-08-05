@@ -1,10 +1,10 @@
-import requests
 import json
 import time
-from retrying import retry
-import helpp
-from lib import db_redis
 
+import requests
+from retrying import retry
+
+from lib import db_redis
 
 headers_tg = {
     "Content-Type": "application/json",
@@ -979,6 +979,22 @@ def deleteMessageOne(bot_url, chat_id, message_id):
             flag = True
     
     return flag
+
+
+def sendMessage(bot_url, chat_id, text):
+    tg_url = bot_url + "sendMessage"
+
+    headers = headers_tg
+
+    data = {
+        "chat_id": chat_id,
+        "text": text,
+    }
+
+    try:
+        response = requests.post(tg_url, json=data, headers=headers, timeout=15)
+    except Exception as e:
+        print("sendMessageOne Exception: %s" % e)
     
     
 def sendMessageOne(bot_url, chat_id, text, reply_message_id=None):
@@ -1279,34 +1295,72 @@ def removeNotOfficialAdmin(group_tg_id):
     return flag
 
 
+def getChatInfo(bot_url, chat_id):
+    tg_url = bot_url + "getChat"
+
+    headers = headers_tg
+
+    data = {
+        "chat_id": chat_id,
+    }
+
+    response = None
+
+    try:
+        response = requests.post(tg_url, json=data, headers=headers, timeout=30)
+    except:
+        pass
+
+    if response is not None:
+        response_text = json.loads(response.text)
+
+        if "ok" in response_text:
+            if response_text["ok"]:
+                if "result" in response_text:
+                    return response_text["result"]
+            else:
+                return False
+
+    return None
+
+
+def getChatAdmins(bot_url, chat_id):
+    tg_url = bot_url + "getChatAdministrators"
+
+    headers = headers_tg
+
+    data = {
+        "chat_id": chat_id,
+    }
+
+    response = None
+
+    try:
+        response = requests.post(tg_url, json=data, headers=headers, timeout=10)
+    except:
+        pass
+
+    admins = []
+    if response is not None:
+        response_text = json.loads(response.text)
+
+        if "ok" in response_text:
+            if response_text["ok"]:
+                if "result" in response_text:
+                    for admin in response_text["result"]:
+                        admins.append(admin['user']['username'])
+
+    return admins
+
+
 def getBio(base_url, chat_id):
     bio = db_redis.bio_get(chat_id)
     if bio is None:
-        tg_url = base_url + "getChat"
-
-        headers = headers_tg
-
-        data = {
-            "chat_id": chat_id,
-        }
-
-        response = None
-
-        try:
-            response = requests.post(tg_url, json=data, headers=headers, timeout=10)
-        except:
-            pass
-
-        if response is not None:
-            response_text = json.loads(response.text)
-
-            if "ok" in response_text:
-                if response_text["ok"]:
-                    if "result" in response_text:
-                        result = response_text["result"]
-                        if "bio" in result:
-                            bio = result["bio"]
-                            db_redis.bio_set(chat_id, bio)
+        result = getChatInfo(base_url, chat_id)
+        if result is not None:
+            if "bio" in result:
+                bio = result["bio"]
+                db_redis.bio_set(chat_id, bio)
 
     return bio
     
