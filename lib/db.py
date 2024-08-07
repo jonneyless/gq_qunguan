@@ -1533,5 +1533,18 @@ def log_msg10_save(group_tg_id, user_tg_id, msg_tg_id, info, created_at_timestam
     opm.dispose()
 
     return result
-    
-    
+
+
+def official_get_firstname(user_tg_id):
+    opm = OPMysql()
+
+    sql = "select firstname from offical_user where tg_id ='%s'" % user_tg_id
+
+    result = opm.op_select_one(sql)
+
+    opm.dispose()
+
+    if result is None:
+        return ""
+
+    return result['firstname']

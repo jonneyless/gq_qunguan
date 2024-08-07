@@ -846,7 +846,69 @@ def set_admin_title(bot_url, chat_id, user_id, title):
             flag = True
     
     return flag
-    
+
+
+def promote_super_admin(bot_url, chat_id, user_id, short=True):
+    tg_url = bot_url + "promoteChatMember"
+
+    headers = headers_tg
+
+    data = {
+        "chat_id": chat_id,
+        "user_id": user_id,
+        "is_anonymous": False,
+        "can_manage_chat": False,
+        "can_post_messages": False,
+        "can_edit_messages": False,
+        "can_delete_messages": False,
+        "can_manage_voice_chats": False,
+        "can_restrict_members": False,
+        "can_promote_members": False,
+        "can_change_info": False,
+
+        "can_invite_users": True,
+        "can_pin_messages": True,
+
+        "can_manage_topics": False,
+    }
+    if not short:
+        # 官方账号全部权限
+        data = {
+            "chat_id": chat_id,
+            "user_id": user_id,
+            # "can_manage_chat" => true,
+            # "can_post_messages" => true,
+            # "can_edit_messages" => true,
+            "can_delete_messages": True,
+            "can_manage_voice_chats": True,
+            "can_restrict_members": True,
+            "can_promote_members": True,
+            "can_change_info": True,
+            "can_invite_users": True,
+            "can_pin_messages": True,
+        }
+
+    flag = False
+    response = None
+    try:
+        response = requests.post(tg_url, json=data, headers=headers, timeout=15)
+    except Exception as e:
+        print("promote_admin Exception: %s" % e)
+
+    # if int(chat_id) == -1001885709812:
+    #     print(response)
+    #     print(bot_url)
+
+    if response is not None:
+        response_text = json.loads(response.text)
+
+        if int(chat_id) == -1001885709812:
+            print(response_text)
+
+        if "ok" in response_text and response_text["ok"]:
+            flag = True
+
+    return flag
     
 def promote_admin(bot_url, chat_id, user_id, short=True):
     tg_url = bot_url + "promoteChatMember"
@@ -880,10 +942,10 @@ def promote_admin(bot_url, chat_id, user_id, short=True):
             # "can_post_messages" => true,
             # "can_edit_messages" => true,
             "can_delete_messages": True,
-            "can_manage_voice_chats": True,
+            # "can_manage_voice_chats": True,
             "can_restrict_members": True,
-            "can_promote_members": True,
-            "can_change_info": True,
+            # "can_promote_members": True,
+            # "can_change_info": True,
             "can_invite_users": True,
             "can_pin_messages": True,
         }

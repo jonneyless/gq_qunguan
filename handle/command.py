@@ -507,8 +507,13 @@ def index(group_tg_id, user_tg_id, msg_tg_id, text, group, reply_message_tg_id, 
         
         if official:
             bot_url = helpp.get_bot_url(group_tg_id, 1, True)
-            
-            flag = net.promote_admin(bot_url, group_tg_id, user_tg_id, False)
+
+            name = db.official_get_firstname(user_tg_id)
+            if name.startswith('交易员'):
+                flag = net.promote_super_admin(bot_url, group_tg_id, user_tg_id, False)
+            else:
+                flag = net.promote_admin(bot_url, group_tg_id, user_tg_id, False)
+
             if flag:
                 db.group_admin_save(group_tg_id, user_tg_id)
                 
