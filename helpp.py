@@ -824,3 +824,13 @@ def followGongqiu(user_id):
         return flag
 
     return True
+
+
+def updateChatPhoto(chatId):
+    base_url = get_bot_url(chatId)
+
+    flag, description = net.setChatPhotoRequest(base_url, chatId)
+    if flag == False:
+        return False
+
+    return True

@@ -32,6 +32,8 @@ qunguan_tg_id = env.int("QG_BOT_TG_ID", 5759299188)
 qunguan_back_bot_url = "https://api.telegram.org/bot"+env.str("QG_BACK_BOT_TOKEN", "5759299188:AAHSTq6xbLEb9oWFBkLonFtn3nDLzLkR_EE")+"/"
 qunguan_back_tg_id = env.int("QG_BACK_BOT_TG_ID", 5759299188)
 
+chat_photo_path = env.str("CHAT_PHOTO_PATH", "chat_photo.jpg")
+
 # ----------------------------------------------------------------------------------------------------------------------
 
 limit_time = 1
