@@ -1437,7 +1437,7 @@ def groups_get1000(max_id=-1):
 def getGroupIds():
     opm = OPMysql()
 
-    sql = "select chat_id from `groups` where deleted = 2 and opened = 1 and flag = 0"
+    sql = "select chat_id from `groups` where deleted = 2 and opened = 1"
 
     result = opm.op_select_all(sql)
 
