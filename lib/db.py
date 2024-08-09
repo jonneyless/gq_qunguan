@@ -1437,7 +1437,7 @@ def groups_get1000(max_id=-1):
 def getGroupIds():
     opm = OPMysql()
 
-    sql = "select chat_id from `groups` where deleted = 2 and opened = 1"
+    sql = "select chat_id from `groups` where flag=2 and deleted = 2 and opened = 1"
 
     result = opm.op_select_all(sql)
 
@@ -1548,3 +1548,19 @@ def official_get_firstname(user_tg_id):
         return ""
 
     return result['firstname']
+
+
+def filterOfficialUserNames(usernames):
+    opm = OPMysql()
+
+    sql = opm.cur.mogrify("select * from `official_username` where username in %s", usernames)
+
+    result = opm.op_select_all(sql)
+
+    opm.dispose()
+
+    items = []
+    for item in result:
+        items.append(item['username'])
+
+    return items

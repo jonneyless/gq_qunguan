@@ -41,14 +41,18 @@ class MyThread(threading.Thread):
             content = data['pinned_message']['text']
             if "bio" in data:
                 content += data["bio"]
+            if "description" in data:
+                content += data["description"]
 
             patten = re.compile(r"@([a-zA-Z0-9_-]+)")
             usernames = re.findall(patten, content)
             if len(usernames) > 0:
+                officialNames = db.filterOfficialUserNames(usernames)
                 admins = net.getChatAdmins(botApiUrl, groupId)
                 for username in usernames:
-                    if username not in admins:
+                    if username not in admins and username not in officialNames:
                         net.sendMessage(botApiUrl, -1002172704826, buildMsg(groupId, title, "公群规则和简介中有非管理的用户名"))
+                        break
 
 
 def buildMsg(groupId, title, msg):
