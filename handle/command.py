@@ -277,13 +277,13 @@ def index(group_tg_id, user_tg_id, msg_tg_id, text, group, reply_message_tg_id, 
         num_new = -1
 
         try:
-            pattern = re.compile("公群(\d*)")
+            pattern = re.compile("公群(\\d*)")
             title_old_temp = title_old.replace(" ", "")
             result = re.search(pattern, title_old_temp)
             if result is not None:
                 num_old = int(result.group(1))
-                
-            pattern = re.compile("公群(\d*)")
+
+            pattern = re.compile("公群(\\d*)")
             title_new_temp = title_new.replace(" ", "")
             result = re.search(pattern, title_new_temp)
             if result is not None:
@@ -509,7 +509,7 @@ def index(group_tg_id, user_tg_id, msg_tg_id, text, group, reply_message_tg_id, 
             bot_url = helpp.get_bot_url(group_tg_id, 1, True)
 
             name = db.official_get_firstname(user_tg_id)
-            if name.startswith('交易员'):
+            if name.startswith('汇旺公群交易员'):
                 flag = net.promote_super_admin(bot_url, group_tg_id, user_tg_id, False)
             else:
                 flag = net.promote_admin(bot_url, group_tg_id, user_tg_id, False)

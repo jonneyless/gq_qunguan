@@ -689,6 +689,9 @@ def remove_admin(bot_url, group_tg_id, user_tg_id):
         "can_pin_messages": False,
     }
 
+    print(tg_url)
+    print(data)
+
     flag = False
     response = None
     try:
@@ -698,6 +701,7 @@ def remove_admin(bot_url, group_tg_id, user_tg_id):
 
     if response is not None:
         response_text = json.loads(response.text)
+        print(response_text)
         if "ok" in response_text and response_text["ok"]:
             flag = True
 
@@ -874,7 +878,7 @@ def promote_super_admin(bot_url, chat_id, user_id, short=True):
         "can_manage_topics": False,
     }
     if not short:
-        # 官方账号全部权限
+        # 官方交易员账号全部权限
         data = {
             "chat_id": chat_id,
             "user_id": user_id,
@@ -903,6 +907,8 @@ def promote_super_admin(bot_url, chat_id, user_id, short=True):
 
     if response is not None:
         response_text = json.loads(response.text)
+
+        print(response_text)
 
         if int(chat_id) == -1001885709812:
             print(response_text)
@@ -937,22 +943,25 @@ def promote_admin(bot_url, chat_id, user_id, short=True):
         "can_manage_topics": False,
     }
     if not short:
-        # 官方账号全部权限
+        # 非交易账号部分权限
         data = {
             "chat_id": chat_id,
             "user_id": user_id,
-            # "can_manage_chat" => true,
-            # "can_post_messages" => true,
-            # "can_edit_messages" => true,
+            "is_anonymous": False,
+            "can_manage_chat": False,
+            "can_post_messages": False,
+            "can_edit_messages": False,
             "can_delete_messages": True,
-            # "can_manage_voice_chats": True,
+            "can_manage_voice_chats": False,
             "can_restrict_members": True,
-            # "can_promote_members": True,
-            # "can_change_info": True,
+            "can_promote_members": False,
+            "can_change_info": False,
             "can_invite_users": True,
             "can_pin_messages": True,
         }
 
+    print(tg_url)
+    print(data)
     flag = False
     response = None
     try:
@@ -967,7 +976,7 @@ def promote_admin(bot_url, chat_id, user_id, short=True):
     if response is not None:
         response_text = json.loads(response.text)
 
-        if int(chat_id) == -1001885709812:
+        if int(chat_id) == -1001885709812 or int(chat_id) == -1002233012973:
             print(response_text)
 
         if "ok" in response_text and response_text["ok"]:
@@ -1004,6 +1013,9 @@ def game_promote_admin(bot_url, chat_id, user_id, short=False):
     }
     if short:
         data["can_manage_video_chats"] = False
+
+    print(tg_url)
+    print(data)
 
     flag = False
     response = None
@@ -1553,7 +1565,7 @@ def setChatPhotoRequest(bot_url, chat_id):
         print(response.text)
         response_text = json.loads(response.text)
         # print(response_text)
-        print("setChatPhotoRequest %s %s %s" % (chat_id, photo, response_text))
+        print("setChatPhotoRequest %s %s" % (chat_id, response_text))
 
         if "ok" in response_text:
             if response_text["ok"]:
