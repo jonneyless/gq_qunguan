@@ -40,9 +40,9 @@ class MyThread(threading.Thread):
 
             content = data['pinned_message']['text']
             if "bio" in data:
-                content += data["bio"]
+                content += " " + data["bio"]
             if "description" in data:
-                content += data["description"]
+                content += " " + data["description"]
 
             patten = re.compile(r"@([a-zA-Z0-9_-]+)")
             usernames = re.findall(patten, content)

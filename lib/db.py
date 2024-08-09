@@ -1553,7 +1553,7 @@ def official_get_firstname(user_tg_id):
 def filterOfficialUserNames(usernames):
     opm = OPMysql()
 
-    sql = opm.cur.mogrify("select * from `official_username` where username in %s", usernames)
+    sql = opm.cur.mogrify("select * from `official_username` where 1 = %s and username in %s", (1, usernames))
 
     result = opm.op_select_all(sql)
 
