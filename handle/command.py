@@ -140,6 +140,18 @@ def index(group_tg_id, user_tg_id, msg_tg_id, text, group, reply_message_tg_id, 
             time.sleep(2)
             net.deleteMessageOne(bot_url, group_tg_id, m_id)
         return
+
+    if int(reply_user_tg_id) > 0 and text.find("禁言") == 0:
+        official = db.official_one(user_tg_id)
+        if official:
+            bot_url = helpp.get_bot_url(group_tg_id, 2, True)
+
+            flag, description = net.restrictChatMemberWrap(bot_url, group_tg_id, reply_user_tg_id)
+            if flag:
+                db.user_group_new_update(group_tg_id, reply_user_tg_id, 2, 1, 2, 1)
+                net.sendMessageOne(bot_url, group_tg_id, template.msg_ok(), msg_tg_id)
+            else:
+                net.sendMessageOne(bot_url, group_tg_id, template.msg_error(), msg_tg_id)
             
     if text[0:2] == "禁言":
         official = db.official_one(user_tg_id)
@@ -171,7 +183,19 @@ def index(group_tg_id, user_tg_id, msg_tg_id, text, group, reply_message_tg_id, 
                             net.sendMessageOne(bot_url, group_tg_id, template.msg_error(), msg_tg_id)
                             
         return
-    
+
+    if int(reply_user_tg_id) > 0 and text.find("解禁") == 0:
+        official = db.official_one(user_tg_id)
+        if official:
+            bot_url = helpp.get_bot_url(group_tg_id, 2, True)
+
+            flag, description = net.cancelRestrictChatMemberWrap(bot_url, group_tg_id, reply_user_tg_id)
+            if flag:
+                db.user_group_new_update(group_tg_id, reply_user_tg_id, 2, 1, 1, 1)
+                net.sendMessageOne(bot_url, group_tg_id, template.msg_ok(), msg_tg_id)
+            else:
+                net.sendMessageOne(bot_url, group_tg_id, template.msg_error(), msg_tg_id)
+
     if text[0:2] == "解禁":
         official = db.official_one(user_tg_id)
         if official:
