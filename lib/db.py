@@ -1564,3 +1564,51 @@ def filterOfficialUserNames(usernames):
         items.append(item['username'])
 
     return items
+
+
+def getActiveDanbaoGroupNums():
+    opm = OPMysql()
+
+    sql = "select num from `log_danbao` where status = 1"
+
+    result = opm.op_select_all(sql)
+
+    opm.dispose()
+
+    items = []
+    for item in result:
+        items.append(int(item['num']))
+
+    return items
+
+
+def getGroupsByNums(nums):
+    opm = OPMysql()
+
+    sql = opm.cur.mogrify("select * from `groups` where 1 = %s and group_num in %s", (1, nums))
+
+    result = opm.op_select_all(sql)
+
+    return result
+
+
+def getGroupsByTgIds(tgIds):
+    opm = OPMysql()
+
+    sql = opm.cur.mogrify("select * from `groups` where 1 = %s and chat_id in %s", (1, tgIds))
+
+    result = opm.op_select_all(sql)
+
+    return result
+
+
+def getWaitingApprove():
+    opm = OPMysql()
+
+    sql = "select group_tg_id, user_tg_id from `log_approve` where status = 2"
+
+    result = opm.op_select_all(sql)
+
+    opm.dispose()
+
+    return result
