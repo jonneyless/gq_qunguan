@@ -1,5 +1,9 @@
-import redis
+import datetime
 import json
+import time
+
+import redis
+
 from config import redisInfo
 
 pool = redis.ConnectionPool(host=redisInfo["host"], port=redisInfo["port"], db=10)
@@ -929,5 +933,22 @@ def msg10_status_set(group_tg_id, user_tg_id):
     conn = get_conn()
 
     conn.set(key, 1, 60 * 5)  # 5分钟
-    
-    
+
+
+def todayUserJoinGroupCount(user_tg_id, plus=False):
+    key = prefix + ":user:" + str(user_tg_id) + ":groups:" + time.strftime('%Y%m%d', time.localtime())
+
+    conn = get_conn()
+
+    val = conn.get(key)
+    if val is None:
+        val = 0
+    else:
+        val = int(val)
+
+    if plus:
+        val = val + 1
+        exat = int(time.mktime(time.strptime(str(datetime.date.today() + datetime.timedelta(days=1)), '%Y-%m-%d')))
+        conn.set(key, val, exat=exat)
+
+    return val

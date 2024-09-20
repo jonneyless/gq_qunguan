@@ -1,3 +1,5 @@
+import time
+
 import helpp
 import net
 from lib import db
@@ -15,10 +17,8 @@ def index(group_tg_id, user_tg_id, group, user):
     fullname = user["fullname"]
     username = user["username"]
     hasChinese = int(user["hasChinese"])
-    bot_url = helpp.get_bot_url(group_tg_id, 1, True)
-    intro = net.getBio(bot_url, user_tg_id)
-    print('intro:', intro)
 
+    bot_url = helpp.get_bot_url(group_tg_id, 1, True)
 
     # // status = 1 成功
     # // status = 2 等待中
@@ -35,11 +35,27 @@ def index(group_tg_id, user_tg_id, group, user):
     # // reason = 9 3天以前的自动拒绝
     # // reason = 10 后台手动通过
     # // reason = 11 疑似协议号短时间大量申请进群
+    # // reason = 12 第一个群进群时间大于两个月的账号每天进的前5个群自动审核通过！
     # // reason = 100 广告互换群，群老板自动通过
     
     log_id = db.log_approve_save(group_tg_id, user_tg_id, user, 2)
     if log_id is None:
         return
+
+    firstTime = helpp.get_user_in_group_first_time(user_tg_id)
+    if firstTime < int(time.time()) + 3600 * 24 * 60:
+        todayGroupCount = db_redis.todayUserJoinGroupCount(user_tg_id)
+        if todayGroupCount < 5:
+            bot_url = helpp.get_bot_url(group_tg_id, 3)
+
+            flag, description = net.approveChatJoinRequestWrap(bot_url, group_tg_id, user_tg_id)
+            if flag:
+                db.log_approve_update(log_id, 1, 12)
+                db_redis.todayUserJoinGroupCount(user_tg_id, True)
+
+            print("old_user_auto %s %s %s %s %s %s" % (group_tg_id, user_tg_id, username, fullname, flag, description))
+
+            return
 
     if status_approve_five == 1:
         if helpp.is_official_white(user_tg_id):
@@ -111,6 +127,7 @@ def index(group_tg_id, user_tg_id, group, user):
 
         return
 
+    intro = net.getBio(bot_url, user_tg_id)
     intro_restrict_word = helpp.has_intro_restrict_word(intro)
     if intro_restrict_word is not None:
         name = intro_restrict_word["name"]
