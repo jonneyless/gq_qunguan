@@ -5,6 +5,7 @@ import time
 import redis
 
 from config import redisInfo
+from lib import db
 
 pool = redis.ConnectionPool(host=redisInfo["host"], port=redisInfo["port"], db=10)
 pool2 = redis.ConnectionPool(host=redisInfo["host"], port=redisInfo["port"], db=2)
@@ -964,6 +965,26 @@ def todayUserJoinGroupCount(user_tg_id, plus=False):
         conn.set(key, val, exat=exat)
 
     return val
+
+
+def get_keyword_replies():
+    key = prefix + ":keyword:replies"
+
+    conn = get_conn()
+
+    val = conn.get(key)
+    if val is None:
+        replies = db.getKeywordReplies()
+        data = {}
+        for reply in replies:
+            data[reply['keyword']] = reply
+
+        conn.set(key, json.dumps(data), 600)
+    else:
+        data = json.loads(val)
+
+    return data
+
 
 
 def reply_repeat_check(chatId, keyword):

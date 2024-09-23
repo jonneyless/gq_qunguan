@@ -1617,6 +1617,18 @@ def getWaitingApprove():
     return result
 
 
+def getKeywordReplies():
+    opm = OPMysql()
+
+    sql = "select * from `keyword_reply` where 1 = 1"
+
+    result = opm.op_select_all(sql)
+
+    opm.dispose()
+
+    return result
+
+
 def getLastKeywordReplyRecord(chatId, keyword):
     opm = OPMysql()
 

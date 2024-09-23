@@ -2,12 +2,11 @@ import threading
 import time
 
 import helpp
-from assist import get_current_time
 from config import threadNumMaps
-from lib import db_redis
-from lib import db
 from handle import check_msg_word, check_user, msg_other
-
+from handle.keyword_reply import keyword_reply
+from lib import db
+from lib import db_redis
 
 thread_num = threadNumMaps['msg']
 
@@ -54,6 +53,15 @@ class MyThread(threading.Thread):
                 if "user" in item:
                     user = item["user"]
 
+                keywordReplies = db_redis.get_keyword_replies()
+                if info in keywordReplies:
+                    keyword_reply({
+                        'chat_id': group_tg_id,
+                        'tg_id': user_tg_id,
+                        'message_id': msg_tg_id,
+                        'reply': keywordReplies[info]
+                    })
+
                 ope_flag = helpp.can_ope(group_tg_id, user_tg_id, True)
                 if not ope_flag:
                     print("%s %s can't ope" % (group_tg_id, user_tg_id))
@@ -83,7 +91,7 @@ class MyThread(threading.Thread):
                     trade_type = item["trade_type"]
                     
                     msg_other.index(group_tg_id, user_tg_id, msg_tg_id, user, info, hasChinese, forward_from, has_hide_link, flag, trade_type)
-                
+
                 # try:
                 #     print(item)
                     
