@@ -312,18 +312,6 @@ def command_get():
         return None
     else:
         return json.loads(data)
-
-
-def keyword_trigger_get():
-    key = "keyword:trigger"
-
-    conn = get_conn()
-
-    data = conn.lpop(key)
-    if data is None:
-        return None
-    else:
-        return json.loads(data)
         
         
 def danbao_get():
