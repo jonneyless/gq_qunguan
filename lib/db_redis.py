@@ -311,6 +311,18 @@ def command_get():
         return None
     else:
         return json.loads(data)
+
+
+def keyword_trigger_get():
+    key = "keyword:trigger"
+
+    conn = get_conn()
+
+    data = conn.lpop(key)
+    if data is None:
+        return None
+    else:
+        return json.loads(data)
         
         
 def danbao_get():
@@ -952,3 +964,23 @@ def todayUserJoinGroupCount(user_tg_id, plus=False):
         conn.set(key, val, exat=exat)
 
     return val
+
+
+def reply_repeat_check(chatId, keyword):
+    key = prefix + ":keyword:reply:" + str(chatId) + ":" + str(keyword)
+
+    conn = get_conn()
+
+    val = conn.get(key)
+    if val is None:
+        return False
+    else:
+        return True
+
+
+def set_reply_repeat(chatId, keyword):
+    key = prefix + ":keyword:reply:" + str(chatId) + ":" + str(keyword)
+
+    conn = get_conn()
+
+    conn.set(key, 1, 180)

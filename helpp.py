@@ -26,6 +26,8 @@ def get_bot_url(group_tg_id, typee=2, back=False):
         token = bot["token"]
         bot_url = "https://api.telegram.org/bot%s/" % token
 
+        print(bot_url)
+
         db_redis.bot_url_set(group_tg_id, typee, bot_url)
 
     return bot_url

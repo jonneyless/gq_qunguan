@@ -33,6 +33,7 @@ qunguan_back_bot_url = "https://api.telegram.org/bot"+env.str("QG_BACK_BOT_TOKEN
 qunguan_back_tg_id = env.int("QG_BACK_BOT_TG_ID", 5759299188)
 
 chat_photo_path = env.str("CHAT_PHOTO_PATH", "chat_photo.jpg")
+admin_url = env.str("ADMIN_URL", "http://jony.fsa2.xyz/")
 
 # ----------------------------------------------------------------------------------------------------------------------
 
@@ -113,4 +114,5 @@ threadNumMaps = {
     'userIn': env.int("THREAD_NUM_USER_IN", 8),
     'userSpecial': env.int("THREAD_NUM_USER_SPECIAL", 1),
     'forewarning': env.int("THREAD_NUM_FOREWARNING", 1),
+    'keyword': env.int("THREAD_KEYWORD", 1),
 }

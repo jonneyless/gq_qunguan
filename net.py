@@ -1058,6 +1058,31 @@ def deleteMessageOne(bot_url, chat_id, message_id):
     return flag
 
 
+def deleteMessages(bot_url, chat_id, message_ids):
+    tg_url = bot_url + "deleteMessages"
+
+    headers = headers_tg
+
+    data = {
+        "chat_id": chat_id,
+        "message_ids": json.dumps(message_ids),
+    }
+
+    flag = False
+    response = None
+    try:
+        response = requests.post(tg_url, json=data, headers=headers, timeout=15)
+    except Exception as e:
+        print("deleteMessages Exception: %s" % e)
+
+    if response is not None:
+        response_text = json.loads(response.text)
+        if "ok" in response_text and response_text["ok"]:
+            flag = True
+
+    return flag
+
+
 def sendMessage(bot_url, chat_id, text):
     tg_url = bot_url + "sendMessage"
 
@@ -1140,6 +1165,84 @@ def sendMessageOneWithBtn(bot_url, chat_id, text, btns):
 
         print(response_text)
 
+        if "ok" in response_text and response_text["ok"]:
+            if "result" in response_text:
+                message_id = response_text["result"]["message_id"]
+
+    return message_id
+
+
+def sendPhotoOne(bot_url, chat_id, photo):
+    tg_url = bot_url + "sendPhoto"
+
+    headers = headers_tg
+
+    data = {
+        "chat_id": chat_id,
+        "photo": photo,
+    }
+
+    message_id = -1
+    response = None
+    try:
+        response = requests.post(tg_url, json=data, headers=headers, timeout=15)
+    except Exception as e:
+        print("sendPhotoOne Exception: %s" % e)
+
+    if response is not None:
+        response_text = json.loads(response.text)
+        if "ok" in response_text and response_text["ok"]:
+            if "result" in response_text:
+                message_id = response_text["result"]["message_id"]
+
+    return message_id
+
+
+def sendVideoOne(bot_url, chat_id, video):
+    tg_url = bot_url + "sendVideo"
+
+    headers = headers_tg
+
+    data = {
+        "chat_id": chat_id,
+        "video": video,
+    }
+
+    message_id = -1
+    response = None
+    try:
+        response = requests.post(tg_url, json=data, headers=headers, timeout=15)
+    except Exception as e:
+        print("sendVideoOne Exception: %s" % e)
+
+    if response is not None:
+        response_text = json.loads(response.text)
+        if "ok" in response_text and response_text["ok"]:
+            if "result" in response_text:
+                message_id = response_text["result"]["message_id"]
+
+    return message_id
+
+
+def sendDocumentOne(bot_url, chat_id, document):
+    tg_url = bot_url + "sendDocument"
+
+    headers = headers_tg
+
+    data = {
+        "chat_id": chat_id,
+        "document": document,
+    }
+
+    message_id = -1
+    response = None
+    try:
+        response = requests.post(tg_url, json=data, headers=headers, timeout=15)
+    except Exception as e:
+        print("sendDocumentOne Exception: %s" % e)
+
+    if response is not None:
+        response_text = json.loads(response.text)
         if "ok" in response_text and response_text["ok"]:
             if "result" in response_text:
                 message_id = response_text["result"]["message_id"]

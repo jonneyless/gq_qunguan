@@ -1,3 +1,6 @@
+import json
+import time
+
 import assist
 from assist import get_current_time, user_same, is_number, get_current_timestamp, timestamp2time, unique_list
 from config import qunguan_tg_id, business_detail_types_no_limit
@@ -1608,6 +1611,30 @@ def getWaitingApprove():
     sql = "select group_tg_id, user_tg_id from `log_approve` where status = 2"
 
     result = opm.op_select_all(sql)
+
+    opm.dispose()
+
+    return result
+
+
+def getLastKeywordReplyRecord(chatId, keyword):
+    opm = OPMysql()
+
+    sql = "select * from `keyword_reply_record` where chat_id = '%s' and keyword = '%s' order by created_at desc" % (chatId, keyword)
+
+    result = opm.op_select_one(sql)
+
+    opm.dispose()
+
+    return result
+
+
+def setKeywordReplyRecord(chatId, keyword, msgId, msgIds):
+    opm = OPMysql()
+
+    sql = "insert into keyword_reply_record (`chat_id`, `message_id`, `reply_message_ids`, `keyword`, `created_at`) values ('%s', '%s', '%s', '%s', %s)" % (str(chatId), str(msgId), json.dumps(msgIds), keyword, int(time.time()))
+
+    result = opm.op_update(sql)
 
     opm.dispose()
 
