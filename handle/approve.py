@@ -36,6 +36,7 @@ def index(group_tg_id, user_tg_id, group, user):
     # // reason = 10 后台手动通过
     # // reason = 11 疑似协议号短时间大量申请进群
     # // reason = 12 第一个群进群时间大于两个月的账号每天进的前5个群自动审核通过！
+    # // reason = 13 有过上押记录的用户自动审核通过
     # // reason = 100 广告互换群，群老板自动通过
     
     log_id = db.log_approve_save(group_tg_id, user_tg_id, user, 2)
@@ -57,6 +58,30 @@ def index(group_tg_id, user_tg_id, group, user):
 
             return
 
+    if helpp.is_vip_svip(user_tg_id):
+        bot_url = helpp.get_bot_url(group_tg_id, 3)
+
+        flag, description = net.approveChatJoinRequestWrap(bot_url, group_tg_id, user_tg_id)
+        if flag:
+            db.log_approve_update(log_id, 1, 6)
+
+        print("is_vip_svip %s %s %s %s %s %s" % (group_tg_id, user_tg_id, username, fullname, flag, description))
+
+        return
+
+    data = net.getYajin(user_tg_id)
+    if data['yajin_num'] > 0:
+        bot_url = helpp.get_bot_url(group_tg_id, 3)
+
+        flag, description = net.approveChatJoinRequestWrap(bot_url, group_tg_id, user_tg_id)
+        if flag:
+            db.log_approve_update(log_id, 1, 13)
+            db_redis.todayUserJoinGroupCount(user_tg_id, True)
+
+        print("old_user_auto %s %s %s %s %s %s" % (group_tg_id, user_tg_id, username, fullname, flag, description))
+
+        return
+
     if status_approve_five == 1:
         if helpp.is_official_white(user_tg_id):
             bot_url = helpp.get_bot_url(group_tg_id, 3)
@@ -66,18 +91,6 @@ def index(group_tg_id, user_tg_id, group, user):
                 db.log_approve_update(log_id, 1, 5)
                 
             print("is_official_white %s %s %s %s %s %s" % (group_tg_id, user_tg_id, username, fullname, flag, description))
-            
-            return
-    
-    if status_approve_vip == 1:
-        if helpp.is_vip_svip(user_tg_id):
-            bot_url = helpp.get_bot_url(group_tg_id, 3)
-            
-            flag, description = net.approveChatJoinRequestWrap(bot_url, group_tg_id, user_tg_id)
-            if flag:
-                db.log_approve_update(log_id, 1, 6)
-            
-            print("is_vip_svip %s %s %s %s %s %s" % (group_tg_id, user_tg_id, username, fullname, flag, description))
             
             return
     

@@ -1428,6 +1428,26 @@ def game_promote_admin_title(bot_url, chat_id, user_id, title, short=True):
 # ============================================================================================================================================
 
 
+def getYajin(tgId):
+    yajinNum = 0
+    yajinMoney = 0
+    groups = []
+
+    url = "http://www.yajin.com:8089/api/history"
+
+    headers = headers_tg
+
+    response = requests.get(url, headers=headers, timeout=30)
+    if response is not None:
+        data = response.json()
+
+        if "msg" in data and data['msg'] == "success":
+            yajinNum = data['data']['nums']
+            yajinMoney = data['data']['money']
+            groups = data['data']['detail']
+
+    return {"yajin_num": yajinNum, "yajin_money": yajinMoney, "groups": groups}
+
 def checkJzHaveData(group_tg_id, start_at, end_at):
     tg_url = "http://jz.admin.com:8680/api/cal/haveData"
 
