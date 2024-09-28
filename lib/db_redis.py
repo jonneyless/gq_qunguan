@@ -950,7 +950,7 @@ def todayUserJoinGroupCount(user_tg_id, plus=False):
     if plus:
         val = val + 1
         exat = int(time.mktime(time.strptime(str(datetime.date.today() + datetime.timedelta(days=1)), '%Y-%m-%d')))
-        conn.set(key, val, exat=exat)
+        conn.set(key, val, exat - int(time.time()))
 
     return val
 
