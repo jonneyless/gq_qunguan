@@ -44,7 +44,7 @@ def index(group_tg_id, user_tg_id, group, user):
         return
 
     firstTime = helpp.get_user_in_group_first_time(user_tg_id)
-    if firstTime < int(time.time()) + 3600 * 24 * 60:
+    if firstTime + 3600 * 24 * 60 < int(time.time()):
         todayGroupCount = db_redis.todayUserJoinGroupCount(user_tg_id)
         if todayGroupCount < 5:
             bot_url = helpp.get_bot_url(group_tg_id, 3)
