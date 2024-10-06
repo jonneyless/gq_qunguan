@@ -42,49 +42,35 @@ def keyword_reply(item):
         if 'replies' in item['reply']:
             replies = json.loads(item["reply"]["replies"])
 
-        buttons = []
-        if 'buttons' in item['reply']:
-            buttons = json.loads(item["reply"]["buttons"])
-
-        file = ''
-        fileType = 0
-        if 'file' in item['reply']:
-            file = admin_url + "uploads/" + item["reply"]["file"]
-            fileType = item["reply"]["file_type"]
-
         replyMsgIds = []
 
-        if file != '':
-            if fileType == 1:
-                msgId = sendPhotoOne(botUrl, chatId, file)
-            elif fileType == 2:
-                msgId = sendVideoOne(botUrl, chatId, file)
-            else:
-                msgId = sendDocumentOne(botUrl, chatId, file)
-
-            if msgId != -1:
-                replyMsgIds.append(msgId)
-
-        index = 0
         for reply in replies:
-            index = index + 1
+            text = None
+            if 'text' in reply:
+                text = reply["text"]
 
-            if index == len(replies) and len(buttons) > 0:
-                row = []
-                rows = []
-                for button in buttons:
-                    row.append(button)
+            file = ''
+            fileType = 0
+            if 'file' in reply:
+                file = admin_url + "uploads/" + reply["file"]
+                fileType = reply["file_type"]
 
-                    if len(row) == 2:
-                        rows.append(row)
-                        row = []
+            replyMarkup = None
+            if 'buttonText' in reply:
+                replyMarkup = {'inline_keyboard': [[{'text': reply['buttonText'], 'url': reply['buttonUrl']}]]}
 
-                if len(row) > 0:
-                    rows.append(row)
-
-                msgId = sendMessageOneWithBtn(botUrl, chatId, reply['text'], {'inline_keyboard': rows})
+            if file != '':
+                if fileType == 1:
+                    msgId = sendPhotoOne(botUrl, chatId, file, text, replyMarkup)
+                elif fileType == 2:
+                    msgId = sendVideoOne(botUrl, chatId, file, text, replyMarkup)
+                else:
+                    msgId = sendDocumentOne(botUrl, chatId, file, text, replyMarkup)
             else:
-                msgId = sendMessageOne(botUrl, chatId, reply['text'])
+                if text is None:
+                    text = "欢迎"
+
+                msgId = sendMessageOneWithBtn(botUrl, chatId, text, replyMarkup)
 
             if msgId != -1:
                 replyMsgIds.append(msgId)

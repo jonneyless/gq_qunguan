@@ -1585,6 +1585,16 @@ def getActiveDanbaoGroupNums():
     return items
 
 
+def getGroupsNeedHiddenMember(nums):
+    opm = OPMysql()
+
+    sql = "select * from `groups` where group_type = 1 and flag = 2 and has_hidden_members = 2 and num > 100"
+
+    result = opm.op_select_all(sql)
+
+    return result
+
+
 def getGroupsByNums(nums):
     opm = OPMysql()
 

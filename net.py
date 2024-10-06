@@ -1135,7 +1135,7 @@ def sendMessageOne(bot_url, chat_id, text, reply_message_id=None):
     return message_id
 
 
-def sendMessageOneWithBtn(bot_url, chat_id, text, btns):
+def sendMessageOneWithBtn(bot_url, chat_id, text, replyMarkup=None):
     tg_url = bot_url + "sendMessage"
 
     headers = headers_tg
@@ -1150,8 +1150,8 @@ def sendMessageOneWithBtn(bot_url, chat_id, text, btns):
         }
     }
 
-    if btns is not None:
-        data["reply_markup"] = btns
+    if replyMarkup is not None:
+        data["reply_markup"] = replyMarkup
 
     message_id = -1
     response = None
@@ -1172,7 +1172,7 @@ def sendMessageOneWithBtn(bot_url, chat_id, text, btns):
     return message_id
 
 
-def sendPhotoOne(bot_url, chat_id, photo):
+def sendPhotoOne(bot_url, chat_id, photo, caption=None, btns=None):
     tg_url = bot_url + "sendPhoto"
 
     headers = headers_tg
@@ -1181,6 +1181,12 @@ def sendPhotoOne(bot_url, chat_id, photo):
         "chat_id": chat_id,
         "photo": photo,
     }
+
+    if caption is not None:
+        data["caption"] = caption
+
+    if btns is not None:
+        data["reply_markup"] = btns
 
     message_id = -1
     response = None
@@ -1198,7 +1204,7 @@ def sendPhotoOne(bot_url, chat_id, photo):
     return message_id
 
 
-def sendVideoOne(bot_url, chat_id, video):
+def sendVideoOne(bot_url, chat_id, video, caption=None, btns=None):
     tg_url = bot_url + "sendVideo"
 
     headers = headers_tg
@@ -1207,6 +1213,12 @@ def sendVideoOne(bot_url, chat_id, video):
         "chat_id": chat_id,
         "video": video,
     }
+
+    if caption is not None:
+        data["caption"] = caption
+
+    if btns is not None:
+        data["reply_markup"] = btns
 
     message_id = -1
     response = None
@@ -1224,7 +1236,7 @@ def sendVideoOne(bot_url, chat_id, video):
     return message_id
 
 
-def sendDocumentOne(bot_url, chat_id, document):
+def sendDocumentOne(bot_url, chat_id, document, caption=None, btns=None):
     tg_url = bot_url + "sendDocument"
 
     headers = headers_tg
@@ -1233,6 +1245,12 @@ def sendDocumentOne(bot_url, chat_id, document):
         "chat_id": chat_id,
         "document": document,
     }
+
+    if caption is not None:
+        data["caption"] = caption
+
+    if btns is not None:
+        data["reply_markup"] = btns
 
     message_id = -1
     response = None
